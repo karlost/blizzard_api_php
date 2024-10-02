@@ -75,11 +75,11 @@ class Request
         }
 
         if (!isset($_SESSION[Configuration::$accessTokenSessionKey])) {
-            return true;
+            return false;
         }
 
         $accessToken = $_SESSION[Configuration::$accessTokenSessionKey];
-        return false;
+        return true;
     }
 
     /**
