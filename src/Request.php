@@ -15,6 +15,12 @@ use stdClass;
 class Request
 {
     /**
+     * From fork by github.com/TheoGibbons:
+     * I was having issues with SSL verification, disabling it seems to fix it.
+     */
+    public static bool $neverVerifySsl = false;
+
+    /**
      * @var string $accessToken Cached access token.
      */
     protected string $accessToken;
@@ -129,6 +135,12 @@ class Request
             curl_setopt($curl_handle, CURLOPT_USERPWD, Configuration::$apiKey . ':' . Configuration::$apiSecret);
             curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl_handle, CURLOPT_HTTPHEADER, ['Content-Type: multipart/form-data']);
+
+            if (self::$neverVerifySsl) {
+                curl_setopt($curl_handle, CURLOPT_SSL_VERIFYHOST, 0);
+                curl_setopt($curl_handle, CURLOPT_SSL_VERIFYPEER, 0);
+            }
+
             $response = curl_exec($curl_handle);
             $status = curl_getinfo($curl_handle, CURLINFO_HTTP_CODE);
 
@@ -267,6 +279,12 @@ class Request
                 curl_setopt($curl_handle, CURLOPT_URL, $url);
                 curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($curl_handle, CURLOPT_HTTPHEADER, ["Authorization: Bearer $this->accessToken"]);
+
+                if (self::$neverVerifySsl) {
+                    curl_setopt($curl_handle, CURLOPT_SSL_VERIFYHOST, 0);
+                    curl_setopt($curl_handle, CURLOPT_SSL_VERIFYPEER, 0);
+                }
+
                 $response = curl_exec($curl_handle);
                 $responseStatus = (int)curl_getinfo($curl_handle, CURLINFO_HTTP_CODE);
             } catch (Exception) {
