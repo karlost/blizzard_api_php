@@ -67,4 +67,14 @@ class Profile extends Request
     {
         return $this->apiRequest("{$this->baseUrl(BaseURL::user_profile)}/collections/pets", $this->defaultOptions($options));
     }
+
+        /**
+     * @param array $options Request options
+     * @return stdClass
+     * @throws ApiException
+     */
+    public function transmogs(array $options = []): stdClass
+    {
+        return $this->apiRequest("{$this->baseUrl(BaseURL::user_profile)}/collections/transmogs", $this->defaultOptions($options));
+    }
 }
